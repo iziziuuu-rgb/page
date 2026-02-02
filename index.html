@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Diary - Saved</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --point-pink: #fff5f6;
+            --point-pink-border: #fee2e2;
+            --point-blue: #f0f7ff;
+            --point-blue-dark: #e0efff;
+            --point-purple: #f8f7ff;
+            --point-green: #f2fcf5;
+            --point-yellow-muted: #fefaf0;
+            --text-main: #111827;
+            --border-dark: #eeeeee;
+        }
+        body {
+            font-family: "Pretendard Variable", sans-serif;
+            background-color: #ffffff;
+            color: var(--text-main);
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { display: none; }
+
+        /* Monthly Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border: 1px solid var(--border-dark);
+            background-color: var(--point-blue);
+            position: relative;
+            z-index: 1;
+        }
+        .calendar-cell {
+            border: 0.5px solid var(--border-dark);
+            aspect-ratio: 1 / 1.4;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.7);
+            transition: background-color 0.2s;
+        }
+        .calendar-cell:hover { background-color: #ffffff; }
+        .cell-memo {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            resize: none;
+            background: transparent;
+            font-size: 10px;
+            color: #9ca3af;
+            line-height: 1.4;
+            padding: 0;
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .calendar-cell:hover .cell-memo, .cell-memo:focus, .cell-memo:not(:placeholder-shown) { opacity: 1; }
+
+        /* Diary Box */
+        .diary-box {
+            background-color: var(--point-yellow-muted);
+            border: 1px solid #f9f3e5;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .diary-paper {
+            background-color: transparent;
+            line-height: 1.8;
+            border: none;
+            outline: none;
+            resize: none;
+            width: 100%;
+            flex-grow: 1;
+            margin-top: 1rem;
+        }
+
+        .nav-active {
+            color: #111827;
+            font-weight: 800;
+            border-bottom: 2px solid #111827;
+        }
+        
+        /* Category Chips */
+        .category-chip {
+            padding: 6px 18px;
+            border-radius: 99px;
+            font-size: 13px;
+            font-weight: 600;
+            background-color: #ffffff;
+            color: #4b5563;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+            display: inline-block;
+        }
+        .category-chip.active {
+            background-color: #a5f3fc;
+            color: #0891b2;
+            border-color: #67e8f9;
+        }
+
+        .btn-add-icon {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fecaca;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            position: absolute;
+            right: -8px;
+            bottom: -4px;
+            transition: all 0.2s;
+            border: 1px solid #fee2e2;
+        }
+
+        /* Sticker Layer */
+        #sticker-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .sticker {
+            position: absolute;
+            cursor: move;
+            pointer-events: auto;
+            user-select: none;
+            z-index: 100;
+        }
+        .sticker img {
+            max-width: 80px;
+            max-height: 80px;
+            display: block;
+        }
+
+        .btn-delete-photo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.4);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+        .photo-box:hover .btn-delete-photo { opacity: 1; }
+        
+        .archive-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 1.25rem;
+            background-color: #fcfcfc;
+            border: 1px solid #f3f4f6;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .archive-item:hover { transform: translateY(-2px); border-color: #e5e7eb; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+
+        @media (max-width: 640px) {
+            .calendar-cell { min-height: 90px; }
+            .daily-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body class="max-w-xl mx-auto min-h-screen border-x border-gray-50 shadow-sm relative">
+
+    <header class="sticky top-0 bg-white/80 backdrop-blur-md z-40 px-6 pt-10 pb-4">
+        <div class="flex justify-between items-end">
+            <h1 class="text-xl font-black tracking-tight text-gray-900 uppercase">Daily Diary</h1>
+            <nav class="flex space-x-5 text-sm text-gray-400 font-medium">
+                <button onclick="switchTab('monthly')" id="btn-monthly" class="pb-1 nav-active">Monthly</button>
+                <button onclick="switchTab('daily')" id="btn-daily" class="pb-1">Daily</button>
+                <button onclick="switchTab('records')" id="btn-records" class="pb-1">Records</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <section id="view-monthly" class="block relative">
+            <div class="mb-6 flex justify-between items-center px-1">
+                <div class="flex items-center gap-4">
+                    <button onclick="changeMonth(-1)" class="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-gray-900 transition-colors bg-transparent border-none">&lt;</button>
+                    <h2 id="calendar-title" class="text-lg font-bold text-slate-700">2026. 03</h2>
+                    <button onclick="changeMonth(1)" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors bg-transparent border-none">&gt;</button>
+                </div>
+                <div>
+                    <input type="file" id="sticker-upload" class="hidden" accept="image/*" onchange="addSticker(event)">
+                    <button onclick="document.getElementById('sticker-upload').click()" class="text-[10px] font-bold bg-[#f0f9ff] text-sky-200 border border-sky-50 px-4 py-1.5 rounded-full shadow-sm hover:bg-sky-100 hover:text-sky-300 transition-colors uppercase tracking-wider">스티커 추가</button>
+                </div>
+            </div>
+            
+            <div class="relative">
+                <div class="calendar-grid rounded-xl overflow-hidden shadow-sm">
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-slate-900">MON</div>
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-slate-900">TUE</div>
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-slate-900">WED</div>
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-slate-900">THU</div>
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-slate-900">FRI</div>
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-blue-500">SAT</div>
+                    <div class="text-[9px] text-center py-2 font-bold bg-slate-50/50 text-red-500">SUN</div>
+                    <div id="calendar-cells-container" class="contents"></div>
+                </div>
+                <div id="sticker-layer"></div>
+            </div>
+
+            <div class="mt-8 p-6 rounded-3xl bg-[var(--point-yellow-muted)] border border-yellow-100/50">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-yellow-600/50 mb-2">Monthly Memo</p>
+                <textarea id="monthly-memo" class="w-full bg-transparent border-none outline-none text-sm leading-relaxed resize-none h-24" placeholder="이번 달 전체 메모를 남겨보세요." oninput="saveMonthlyData()"></textarea>
+            </div>
+        </section>
+
+        <section id="view-daily" class="hidden">
+            <div class="flex justify-center items-center mb-10 pb-4 border-b border-gray-100 text-center">
+                <h2 id="daily-date-header" class="text-sm font-bold text-gray-800">2026.02.09 Monday</h2>
+            </div>
+
+            <div class="daily-grid grid grid-cols-2 gap-8 items-stretch">
+                <div class="flex flex-col space-y-10">
+                    <div class="p-6 rounded-3xl bg-[var(--point-blue)] border border-blue-100 relative overflow-hidden shadow-sm text-center">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-4 text-left">Highlight</p>
+                        <div class="text-blue-300 text-xl mb-2 select-none">♥</div>
+                        <textarea id="daily-highlight" class="w-full bg-transparent border-none text-center text-xs font-medium outline-none resize-none h-16 text-gray-600 leading-relaxed" placeholder="오늘의 핵심 문장" oninput="saveDailyData()"></textarea>
+                    </div>
+
+                    <div class="diary-box shadow-sm flex-grow">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-pink-400 mb-4">Diary</p>
+                        <div class="flex flex-col items-center">
+                            <div class="relative inline-block mb-2">
+                                <div id="diary-main-emoji" class="text-4xl h-10 w-10 flex items-center justify-center"></div>
+                                <div onclick="openEmojiPicker('diary-main-emoji')" class="btn-add-icon">+</div>
+                            </div>
+                        </div>
+                        <textarea id="daily-content" class="diary-paper text-sm text-[#b45309]" placeholder="오늘 어떤 일이 있었나요?" oninput="saveDailyData()"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-10">
+                    <div class="p-5 rounded-3xl bg-[var(--point-purple)] border border-purple-100 shadow-sm">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-purple-600 mb-3">Music</p>
+                        <input type="text" id="yt-input" oninput="updateMusicPreview(this.value); saveDailyData();" class="w-full bg-transparent border-none border-b border-purple-200 text-[10px] italic outline-none pb-1 mb-2 text-gray-400" placeholder="YouTube 주소">
+                        <div id="youtube-preview" class="aspect-video bg-white/50 rounded-lg overflow-hidden flex flex-col items-center justify-center text-[10px] text-purple-300 border border-purple-100">🎵</div>
+                    </div>
+
+                    <div class="flex flex-col flex-grow">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-600 mb-4 px-2">To-Do List</p>
