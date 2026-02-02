@@ -89,7 +89,7 @@
                     <div class="highlight-box bg-[var(--point-blue)] p-8 rounded-[2rem] border border-blue-100 text-center">
                         <p class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-4 text-left">Highlight</p>
                         <div style="color: var(--point-blue-text);" class="text-3xl mb-2 select-none">❝</div>
-                        <textarea id="daily-highlight" class="w-full bg-transparent text-center text-xs font-medium outline-none h-12 resize-none" placeholder="오늘의 핵심 문장"></textarea>
+                        <textarea id="daily-highlight" spellcheck="false" class="w-full bg-transparent text-center text-xs font-medium outline-none h-12 resize-none" placeholder="오늘의 핵심 문장"></textarea>
                     </div>
                     <div class="diary-box flex flex-col relative">
                         <p class="text-[10px] font-bold uppercase tracking-widest mb-6" style="color: #b48a09;">Diary</p>
@@ -97,12 +97,12 @@
                              <div id="daily-emoji" class="text-3xl h-12 w-12 flex items-center justify-center cursor-pointer" ondblclick="deleteEmoji()">🤍</div>
                              <div onclick="openEmojiPicker('daily-emoji')" class="w-6 h-6 bg-white border border-pink-100 rounded-full flex items-center justify-center text-[10px] text-pink-200 absolute -bottom-1 -right-1 cursor-pointer shadow-sm">+</div>
                         </div>
-                        <textarea id="daily-content" class="diary-paper" placeholder="오늘 어떤 일이 있었나요?"></textarea>
+                        <textarea id="daily-content" spellcheck="false" class="diary-paper" placeholder="오늘 어떤 일이 있었나요?"></textarea>
                     </div>
                 </div>
                 <div class="flex flex-col space-y-10">
                     <div class="p-6 rounded-[2rem] bg-[var(--point-purple)] border border-purple-100">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-purple-500 mb-4">Music</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-purple-500 mb-4 text-left">Music</p>
                         <input type="text" id="yt-input" oninput="updateMusicPreview(this.value)" class="w-full bg-transparent border-b border-purple-100 text-[10px] italic outline-none pb-2 mb-4 text-gray-400" placeholder="YouTube 주소">
                         <div id="yt-preview" class="aspect-video bg-white/50 rounded-2xl flex items-center justify-center text-xl text-purple-300">🎵</div>
                     </div>
@@ -146,7 +146,7 @@
                     <button class="category-chip active" onclick="selCat(this, '맛집')">맛집</button>
                     <button class="category-chip" onclick="selCat(this, '카페')">카페</button>
                     <button class="category-chip" onclick="selCat(this, '미디어')">미디어</button>
-                    <button class="category-chip" onclick="selCat(this, '독서')">독서</button>
+                    <button class="category-chip" onclick="selCat(this, '소설')">소설</button>
                     <button class="category-chip" onclick="selCat(this, '만화')">만화</button>
                     <button class="category-chip" onclick="selCat(this, '기타')">기타</button>
                 </div>
@@ -161,8 +161,8 @@
                     <div onclick="deletePhoto(event, 'archive-preview', 'archive-placeholder', 'archive-upload')" class="btn-delete-photo">✕</div>
                 </div>
                 <input type="text" id="archive-title" class="w-full font-bold text-xl mb-6 outline-none border-none placeholder:text-gray-200" placeholder="제목">
-                <textarea id="archive-content" class="w-full text-sm outline-none h-40 resize-none leading-relaxed placeholder:text-gray-200" placeholder="내용을 입력하세요."></textarea>
-                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs tracking-[0.2em] mt-6 shadow-lg uppercase">Save Record</button>
+                <textarea id="archive-content" spellcheck="false" class="w-full text-sm outline-none h-40 resize-none leading-relaxed placeholder:text-gray-200" placeholder="내용을 입력하세요."></textarea>
+                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs tracking-[0.2em] mt-6 shadow-lg shadow-cyan-100 uppercase">Save Record</button>
             </div>
             <div id="archive-list" class="space-y-4"></div>
         </section>
@@ -191,7 +191,7 @@
                     <div class="bg-white border border-gray-100 rounded-[2.5rem] p-8 shadow-sm">
                         <input type="text" id="exp-name" class="w-full text-sm font-bold border-b border-gray-50 pb-3 mb-6 outline-none" placeholder="항목">
                         <input type="number" id="exp-amount" class="w-full text-sm font-bold border-b border-gray-50 pb-3 mb-8 outline-none" placeholder="금액 (₩)">
-                        <button onclick="addExpense()" class="w-full py-4 bg-sky-400 text-white rounded-full font-bold text-[10px] tracking-widest uppercase shadow-md">Add Expense</button>
+                        <button onclick="addExpense()" class="w-full py-4 bg-sky-400 text-white rounded-full font-bold text-[10px] tracking-widest uppercase shadow-md shadow-sky-100">Add Expense</button>
                     </div>
                 </div>
                 <div>
@@ -199,7 +199,7 @@
                     <div class="bg-white border border-gray-100 rounded-[2.5rem] p-8 shadow-sm">
                         <input type="text" id="profit-name" class="w-full text-sm font-bold border-b border-gray-50 pb-3 mb-6 outline-none" placeholder="종목명">
                         <input type="number" id="profit-amount" class="w-full text-sm font-bold border-b border-gray-50 pb-3 mb-8 outline-none" placeholder="실현손익 (₩)">
-                        <button onclick="addProfit()" class="w-full py-4 bg-sky-600 text-white rounded-full font-bold text-[10px] tracking-widest uppercase shadow-md">Record Profit</button>
+                        <button onclick="addProfit()" class="w-full py-4 bg-sky-600 text-white rounded-full font-bold text-[10px] tracking-widest uppercase shadow-md shadow-sky-200">Record Profit</button>
                     </div>
                 </div>
             </div>
@@ -241,13 +241,13 @@
 
     <script>
         let currentYear = 2026, currentMonth = 2, selectedDate = "2026-03-09", curCat = '맛집', editingId = null;
-        let financeYear = 2026, financeMonth = 2; // 가계부용 월 관리
+        let financeYear = 2026, financeMonth = 2;
         let diaryStore = JSON.parse(localStorage.getItem('diaryStore')) || {};
         let archiveStore = JSON.parse(localStorage.getItem('archiveStore')) || [];
         let financeStore = JSON.parse(localStorage.getItem('financeStore')) || {}; 
         let cellMemos = JSON.parse(localStorage.getItem('cellMemos')) || {}; 
         
-        const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🔇','🔈','🔔','🤍','🍣','✈️','🧳','🔋','🪫','🛍️','🧹'];
+        const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🤍','🍣'];
 
         window.onload = () => { renderCalendar(); renderArchives(); renderFinance(); initEmojiPicker(); switchTab('monthly'); };
 
@@ -260,7 +260,6 @@
             window.scrollTo(0,0);
         }
 
-        // --- 캘린더 기능 ---
         function renderCalendar() {
             const container = document.getElementById('calendar-container'); container.innerHTML = '';
             const labels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -279,17 +278,14 @@
             const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
             for(let i=1; i<=lastDate; i++) {
                 const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-                const cell = document.createElement('div');
-                // 3월 9일 강조 제거 (bg-white로 통일)
-                cell.className = `calendar-cell cursor-pointer transition-all hover:bg-white`;
-                cell.innerHTML = `<span class="text-[9px] font-bold ${new Date(currentYear,currentMonth,i).getDay()===0?'text-red-300':''}">${i}</span><div class="text-center text-xs my-auto pointer-events-none">${diaryStore[key]?.emoji || ''}</div><textarea class="cell-memo" placeholder="메모" oninput="saveCellMemo('${key}', this.value)" onclick="event.stopPropagation()">${cellMemos[key] || ''}</textarea>`;
+                const cell = document.createElement('div'); cell.className = `calendar-cell cursor-pointer transition-all hover:bg-white`;
+                cell.innerHTML = `<span class="text-[9px] font-bold ${new Date(currentYear,currentMonth,i).getDay()===0?'text-red-300':''}">${i}</span><div class="text-center text-xs my-auto pointer-events-none">${diaryStore[key]?.emoji || ''}</div><textarea spellcheck="false" class="cell-memo" placeholder="메모" oninput="saveCellMemo('${key}', this.value)" onclick="event.stopPropagation()">${cellMemos[key] || ''}</textarea>`;
                 cell.onclick = (e) => { if(e.target.tagName !== 'TEXTAREA') { selectedDate = key; document.getElementById('daily-date-header').innerText = key; switchTab('daily'); renderCalendar(); } };
                 container.appendChild(cell);
             }
         }
         function saveCellMemo(k, v) { cellMemos[k] = v; localStorage.setItem('cellMemos', JSON.stringify(cellMemos)); }
 
-        // --- 스티커 기능 (복구) ---
         function addSticker(event) {
             const file = event.target.files[0];
             if (file) {
@@ -303,16 +299,9 @@
                     img.src = e.target.result;
                     stickerDiv.appendChild(img);
                     stickerDiv.ondblclick = (ev) => { ev.stopPropagation(); stickerDiv.remove(); };
-                    
                     let isDragging = false; let startX, startY;
-                    stickerDiv.onmousedown = (ev) => {
-                        isDragging = true; startX = ev.clientX - stickerDiv.offsetLeft; startY = ev.clientY - stickerDiv.offsetTop;
-                        stickerDiv.style.zIndex = 1000;
-                    };
-                    document.onmousemove = (ev) => {
-                        if (!isDragging) return;
-                        stickerDiv.style.left = (ev.clientX - startX) + 'px'; stickerDiv.style.top = (ev.clientY - startY) + 'px';
-                    };
+                    stickerDiv.onmousedown = (ev) => { isDragging = true; startX = ev.clientX - stickerDiv.offsetLeft; startY = ev.clientY - stickerDiv.offsetTop; stickerDiv.style.zIndex = 1000; };
+                    document.onmousemove = (ev) => { if (!isDragging) return; stickerDiv.style.left = (ev.clientX - startX) + 'px'; stickerDiv.style.top = (ev.clientY - startY) + 'px'; };
                     document.onmouseup = () => { isDragging = false; };
                     stickerLayer.appendChild(stickerDiv);
                 }
@@ -321,7 +310,6 @@
             }
         }
 
-        // --- 아카이브 기능 ---
         function saveArchive() {
             const t = document.getElementById('archive-title').value, c = document.getElementById('archive-content').value;
             const img = document.getElementById('archive-preview'); if(!t) return alert('제목을 입력해주세요!');
@@ -354,7 +342,6 @@
         function filterArchives(cat, btn) { document.querySelectorAll('#archive-filter-bar .category-chip').forEach(c => c.classList.remove('active')); btn.classList.add('active'); renderArchives(cat); }
         function clearArchiveForm() { document.getElementById('archive-title').value = ''; document.getElementById('archive-content').value = ''; document.getElementById('archive-preview').classList.add('hidden'); document.getElementById('archive-placeholder').classList.remove('hidden'); editingId = null; document.getElementById('btn-archive-save').innerText = 'SAVE RECORD'; }
 
-        // --- 가계부 기능 (월 이동 및 삭제) ---
         function changeFinanceMonth(s) { financeMonth += s; if(financeMonth>11){financeMonth=0;financeYear++}else if(financeMonth<0){financeMonth=11;financeYear--} renderFinance(); }
         function addExpense() {
             const n = document.getElementById('exp-name').value, a = document.getElementById('exp-amount').value; if(!n || !a) return alert('내용을 입력하세요!');
@@ -368,11 +355,7 @@
             financeStore[key].profits.push({ id: Date.now(), name: n, amount: Number(a) }); localStorage.setItem('financeStore', JSON.stringify(financeStore));
             document.getElementById('profit-name').value = ''; document.getElementById('profit-amount').value = ''; renderFinance();
         }
-        function deleteFinanceItem(type, id) {
-            const key = `${financeYear}-${financeMonth}`;
-            financeStore[key][type] = financeStore[key][type].filter(item => item.id !== id);
-            localStorage.setItem('financeStore', JSON.stringify(financeStore)); renderFinance();
-        }
+        function deleteFinanceItem(type, id) { const key = `${financeYear}-${financeMonth}`; financeStore[key][type] = financeStore[key][type].filter(i => i.id !== id); localStorage.setItem('financeStore', JSON.stringify(financeStore)); renderFinance(); }
         function renderFinance() {
             document.getElementById('finance-month-title').innerText = `${financeYear}. ${String(financeMonth+1).padStart(2,'0')}`;
             const key = `${financeYear}-${financeMonth}`; const data = financeStore[key] || { expenses: [], profits: [] };
@@ -384,7 +367,6 @@
             const prEl = document.getElementById('total-profit'); prEl.innerText = `₩ ${totalPr.toLocaleString()}`; prEl.className = totalPr >= 0 ? "text-2xl font-black text-red-400" : "text-2xl font-black text-blue-400";
         }
 
-        // 공통 유틸
         function loadDaily(key) {
             const d = diaryStore[key] || { highlight:'', content:'', emoji:'🤍', youtube:'', todos:[], moment:'' };
             document.getElementById('daily-highlight').value = d.highlight; document.getElementById('daily-content').value = d.content;
@@ -409,14 +391,14 @@
         }
         function deletePhoto(ev, pId, hId, iId) { ev.stopPropagation(); const i = document.getElementById(pId), h = document.getElementById(hId); i.src = ''; i.classList.add('hidden'); h.classList.remove('hidden'); document.getElementById(iId).value=''; if(pId==='moment-preview') saveDailyData(); }
         function previewPhoto(ev, pId, hId) { const f = ev.target.files[0]; if(f) { const r = new FileReader(); r.onload = (e) => { const i = document.getElementById(pId), h = document.getElementById(hId); i.src = e.target.result; i.classList.remove('hidden'); h.classList.add('hidden'); if(pId==='moment-preview') saveDailyData(); }; r.readAsDataURL(f); } }
-        function updateMusicPreview(u) { const id = u.includes('v=') ? u.split('v=')[1].split('&')[0] : (u.includes('be/') ? u.split('be/')[1] : null); document.getElementById('yt-preview').innerHTML = id ? `<iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/${id}"></iframe>` : '🎵'; }
-        function initEmojiPicker() { const g = document.getElementById('emoji-grid'); emojis.forEach(e => { const d = document.createElement('div'); d.className = "text-2xl cursor-pointer text-center p-3 hover:bg-gray-50 rounded-3xl"; d.innerText = e; d.onclick = () => { document.getElementById('daily-emoji').innerText = e; saveDailyData(); closeEmojiPicker(); }; g.appendChild(d); }); }
+        function updateMusicPreview(u) { const id = (u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/)?.[2] || null); document.getElementById('yt-preview').innerHTML = id ? `<iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/${id}"></iframe>` : '🎵'; }
+        function initEmojiPicker() { const g = document.getElementById('emoji-grid'); emojis.forEach(e => { const d = document.createElement('div'); d.className = "text-2xl cursor-pointer text-center p-3 hover:bg-gray-50 rounded-3xl"; d.innerText = e; d.onclick = () => { if(currentTargetId) { document.getElementById(currentTargetId).innerText = e; saveDailyData(); } closeEmojiPicker(); }; g.appendChild(d); }); }
+        let currentTargetId = ''; function openEmojiPicker(id) { currentTargetId = id; document.getElementById('emoji-modal').classList.remove('hidden'); }
+        function closeEmojiPicker() { document.getElementById('emoji-modal').classList.add('hidden'); }
         function deleteEmoji() { document.getElementById('daily-emoji').innerText = ''; saveDailyData(); }
         function addNewTodo() { addTodoRow('', false); }
         function addTodoRow(t, d) { const div = document.createElement('div'); div.className = "todo-item flex items-center space-x-4"; div.innerHTML = `<input type="checkbox" ${d?'checked':''} onchange="saveDailyData()" class="w-4 h-4 rounded-full border-gray-100 accent-gray-900 shadow-sm"><input type="text" class="w-full bg-transparent text-[11px] outline-none text-gray-400 font-medium" value="${t}" placeholder="할 일..." oninput="saveDailyData()">`; document.getElementById('todo-box').appendChild(div); }
         function selCat(btn, c) { document.querySelectorAll('#cat-selection .category-chip').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); curCat = c; }
-        function openEmojiPicker() { document.getElementById('emoji-modal').classList.remove('hidden'); }
-        function closeEmojiPicker() { document.getElementById('emoji-modal').classList.add('hidden'); }
         function toggleArchiveForm() { document.getElementById('archive-form').classList.toggle('hidden'); editingId = null; }
         function changeMonth(s) { currentMonth += s; if(currentMonth>11){currentMonth=0;currentYear++}else if(currentMonth<0){currentMonth=11;currentYear--} renderCalendar(); }
     </script>
