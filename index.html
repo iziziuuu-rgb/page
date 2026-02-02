@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Diary & Finance - Final</title>
+    <title>Daily Diary & Finance - Final Backup v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
@@ -33,15 +33,12 @@
 
         .finance-item { display: flex; justify-content: space-between; padding: 12px 4px; border-bottom: 1px solid #f9fafb; align-items: center; }
         .btn-del-mini { color: #ccc; font-size: 10px; margin-left: 8px; cursor: pointer; }
-        .btn-del-mini:hover { color: #ff9999; }
 
         .photo-upload-placeholder { aspect-ratio: 1 / 1.1; background-color: #ffffff; border: 1.5px dashed #e5e7eb; border-radius: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; width: 100%; }
         .btn-delete-photo { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; background: rgba(0,0,0,0.3); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0; transition: opacity 0.2s; z-index: 10; }
         .photo-upload-placeholder:hover .btn-delete-photo { opacity: 1; }
 
-        .category-chip { padding: 6px 18px; border-radius: 99px; font-size: 11px; font-weight: 600; background: white; border: 1px solid #e5e7eb; color: #4b5563; white-space: nowrap; }
-        .category-chip.active { background-color: #a5f3fc; color: #0891b2; border-color: #67e8f9; }
-
+        /* 스티커 레이어 */
         #sticker-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .sticker { position: absolute; cursor: move; pointer-events: auto; z-index: 100; user-select: none; }
         .sticker img { max-width: 80px; max-height: 80px; display: block; }
@@ -94,7 +91,7 @@
                     <div class="highlight-box bg-[var(--point-blue)] p-8 rounded-[2rem] border border-blue-100 text-center">
                         <p class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-4 text-left">Highlight</p>
                         <div style="color: var(--point-blue-text);" class="text-3xl mb-2 select-none">❝</div>
-                        <textarea id="daily-highlight" spellcheck="false" class="w-full bg-transparent text-center text-xs font-medium outline-none h-12 resize-none" placeholder="오늘의 핵심 문장"></textarea>
+                        <textarea id="daily-highlight" spellcheck="false" class="w-full bg-transparent text-center text-xs font-medium outline-none h-12 resize-none" placeholder="오늘의 핵심 문장" oninput="saveDailyData()"></textarea>
                     </div>
                     <div class="diary-box flex flex-col relative">
                         <p class="text-[10px] font-bold uppercase tracking-widest mb-6" style="color: #b48a09;">Diary</p>
@@ -102,13 +99,13 @@
                              <div id="daily-emoji" class="text-3xl h-12 w-12 flex items-center justify-center cursor-pointer" ondblclick="deleteEmoji()">🤍</div>
                              <div onclick="openEmojiPicker('daily-emoji')" class="w-6 h-6 bg-white border border-pink-100 rounded-full flex items-center justify-center text-[10px] text-pink-200 absolute -bottom-1 -right-1 cursor-pointer shadow-sm">+</div>
                         </div>
-                        <textarea id="daily-content" spellcheck="false" class="diary-paper" placeholder="오늘 어떤 일이 있었나요?"></textarea>
+                        <textarea id="daily-content" spellcheck="false" class="diary-paper" placeholder="오늘 어떤 일이 있었나요?" oninput="saveDailyData()"></textarea>
                     </div>
                 </div>
                 <div class="flex flex-col space-y-10">
                     <div class="p-6 rounded-[2rem] bg-[var(--point-purple)] border border-purple-100">
                         <p class="text-[10px] font-bold uppercase tracking-widest text-purple-500 mb-4">Music</p>
-                        <input type="text" id="yt-input" oninput="updateMusicPreview(this.value)" class="w-full bg-transparent border-b border-purple-100 text-[10px] italic outline-none pb-2 mb-4 text-gray-400" placeholder="YouTube 주소">
+                        <input type="text" id="yt-input" oninput="updateMusicPreview(this.value); saveDailyData();" class="w-full bg-transparent border-b border-purple-100 text-[10px] italic outline-none pb-2 mb-4 text-gray-400" placeholder="YouTube 주소">
                         <div id="yt-preview" class="aspect-video bg-white/50 rounded-2xl flex items-center justify-center text-xl text-purple-300">🎵</div>
                     </div>
                     <div class="border border-gray-100 rounded-[2rem] p-6 bg-white">
@@ -144,12 +141,11 @@
                 <button class="category-chip" onclick="filterArchives('기타', this)">기타</button>
             </div>
             <div id="archive-form" class="hidden bg-white border border-pink-50 rounded-[3rem] p-10 mb-12 shadow-sm animate-in zoom-in-95">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">1. Category</p>
                 <div class="flex flex-wrap gap-2 mb-10" id="cat-selection">
                     <button class="category-chip active" onclick="selCat(this, '맛집')">맛집</button>
                     <button class="category-chip" onclick="selCat(this, '카페')">카페</button>
                     <button class="category-chip" onclick="selCat(this, '미디어')">미디어</button>
-                    <button class="category-chip" onclick="selCat(this, '독서')">독서</button>
+                    <button class="category-chip" onclick="selCat(this, '소설')">소설</button>
                     <button class="category-chip" onclick="selCat(this, '만화')">만화</button>
                     <button class="category-chip" onclick="selCat(this, '기타')">기타</button>
                 </div>
@@ -162,9 +158,9 @@
                     <input type="file" id="archive-upload" class="hidden" accept="image/*" onchange="previewPhoto(event, 'archive-preview', 'archive-placeholder')">
                     <div onclick="deletePhoto(event, 'archive-preview', 'archive-placeholder', 'archive-upload')" class="btn-delete-photo">✕</div>
                 </div>
-                <input type="text" id="archive-title" class="w-full font-bold text-xl mb-6 outline-none border-none" placeholder="제목">
+                <input type="text" id="archive-title" class="w-full font-bold text-xl mb-6 outline-none border-none placeholder:text-gray-200" placeholder="제목">
                 <textarea id="archive-content" spellcheck="false" class="w-full text-sm outline-none h-40 resize-none leading-relaxed placeholder:text-gray-200" placeholder="내용을 입력하세요."></textarea>
-                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs mt-6 shadow-lg uppercase">Save Record</button>
+                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs shadow-lg uppercase">Save Record</button>
             </div>
             <div id="archive-list" class="space-y-4"></div>
         </section>
@@ -202,60 +198,102 @@
     <div id="emoji-modal" class="fixed inset-0 bg-black/5 backdrop-blur-md z-[100] hidden flex items-center justify-center"><div class="bg-white p-10 rounded-[3rem] max-w-sm w-full shadow-2xl"><div class="grid grid-cols-5 gap-6 h-80 overflow-y-auto pr-2" id="emoji-grid"></div><button onclick="closeEmojiPicker()" class="w-full mt-8 py-4 bg-gray-50 text-gray-400 font-bold rounded-2xl text-[10px] uppercase">Close</button></div></div>
 
     <script>
-        // --- 기본 데이터 및 상태 ---
         let currentYear = 2026, currentMonth = 2, selectedDate = "2026-03-09", curCat = '맛집', editingId = null;
         let financeYear = 2026, financeMonth = 2;
         let diaryStore = JSON.parse(localStorage.getItem('diaryStore')) || {};
         let archiveStore = JSON.parse(localStorage.getItem('archiveStore')) || [];
         let financeStore = JSON.parse(localStorage.getItem('financeStore')) || {}; 
         let cellMemos = JSON.parse(localStorage.getItem('cellMemos')) || {}; 
-        
-        const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🤍','🍣','✈️','🧳','🔋','🪫','🛍️','🧹'];
+        let stickers = JSON.parse(localStorage.getItem('stickers')) || []; // [NEW] 스티커 데이터 저장소
 
-        window.onload = () => { renderCalendar(); renderArchives(); renderFinance(); initEmojiPicker(); switchTab('monthly'); };
+        const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🤍','🍣'];
 
-        // --- 데이터 백업 및 복구 기능 [NEW] ---
+        window.onload = () => { renderCalendar(); renderArchives(); renderFinance(); initEmojiPicker(); loadStickers(); switchTab('monthly'); };
+
+        // --- 데이터 백업 및 복구 (스티커 포함) ---
         function exportData() {
-            const allData = { diaryStore, archiveStore, financeStore, cellMemos };
+            const allData = { diaryStore, archiveStore, financeStore, cellMemos, stickers }; // stickers 추가
             const blob = new Blob([JSON.stringify(allData)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = `diary_backup_${new Date().toLocaleDateString()}.json`;
+            a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toLocaleDateString()}.json`;
             a.click();
         }
 
         function importData() { document.getElementById('import-input').click(); }
-
         function processImport(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (confirm("기존 기록을 지우고 백업 파일을 불러올까요?")) {
+                    if (confirm("데이터를 덮어씌울까요?")) {
                         localStorage.setItem('diaryStore', JSON.stringify(data.diaryStore || {}));
                         localStorage.setItem('archiveStore', JSON.stringify(data.archiveStore || []));
                         localStorage.setItem('financeStore', JSON.stringify(data.financeStore || {}));
                         localStorage.setItem('cellMemos', JSON.stringify(data.cellMemos || {}));
-                        location.reload(); // 새로고침하여 데이터 반영
+                        localStorage.setItem('stickers', JSON.stringify(data.stickers || [])); // stickers 복구
+                        location.reload();
                     }
-                } catch (err) { alert("올바른 백업 파일이 아닙니다."); }
+                } catch (err) { alert("잘못된 파일입니다."); }
             };
             reader.readAsDataURL(file);
         }
 
-        // --- 탭 전환 ---
-        function switchTab(id) {
-            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + id).classList.add('active');
-            if(id === 'daily') loadDaily(selectedDate);
-            window.scrollTo(0,0);
+        // --- 스티커 기능 보강 (저장 로직 추가) ---
+        function addSticker(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const id = Date.now();
+                    const stickerData = { id, src: e.target.result, left: 50, top: 100 };
+                    stickers.push(stickerData);
+                    saveStickers();
+                    createStickerElement(stickerData);
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
-        // --- 캘린더 기능 ---
+        function createStickerElement(data) {
+            const layer = document.getElementById('sticker-layer');
+            const div = document.createElement('div');
+            div.className = 'sticker';
+            div.style.left = data.left + 'px'; div.style.top = data.top + 'px';
+            div.innerHTML = `<img src="${data.src}">`;
+            
+            div.ondblclick = (e) => {
+                e.stopPropagation();
+                stickers = stickers.filter(s => s.id !== data.id);
+                saveStickers(); div.remove();
+            };
+
+            let isDragging = false, startX, startY;
+            div.onmousedown = (e) => {
+                isDragging = true;
+                startX = e.clientX - div.offsetLeft;
+                startY = e.clientY - div.offsetTop;
+                div.style.zIndex = 1000;
+            };
+            document.onmousemove = (e) => {
+                if (!isDragging) return;
+                const newLeft = e.clientX - startX;
+                const newTop = e.clientY - startY;
+                div.style.left = newLeft + 'px'; div.style.top = newTop + 'px';
+                // 실시간 위치 데이터 업데이트
+                const s = stickers.find(item => item.id === data.id);
+                if(s) { s.left = newLeft; s.top = newTop; }
+            };
+            document.onmouseup = () => { if(isDragging) { isDragging = false; saveStickers(); } };
+            layer.appendChild(div);
+        }
+
+        function loadStickers() { stickers.forEach(s => createStickerElement(s)); }
+        function saveStickers() { localStorage.setItem('stickers', JSON.stringify(stickers)); }
+
+        // --- 나머지 기존 기능 유지 ---
+        function switchTab(id) { document.querySelectorAll('section').forEach(s => s.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + id).classList.add('active'); if(id === 'daily') loadDaily(selectedDate); window.scrollTo(0,0); }
         function renderCalendar() {
             const container = document.getElementById('calendar-container'); container.innerHTML = '';
             const labels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -267,10 +305,7 @@
             });
             document.getElementById('calendar-title').innerText = `${currentYear}. ${String(currentMonth+1).padStart(2,'0')}`;
             const firstDay = (new Date(currentYear, currentMonth, 1).getDay() || 7) - 1;
-            for(let i=0; i<firstDay; i++) {
-                const empty = document.createElement('div'); empty.className = "border-r border-b"; empty.style.borderColor = "var(--border-color)";
-                container.appendChild(empty);
-            }
+            for(let i=0; i<firstDay; i++) { const empty = document.createElement('div'); empty.className = "border-r border-b"; empty.style.borderColor = "var(--border-color)"; container.appendChild(empty); }
             const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
             for(let i=1; i<=lastDate; i++) {
                 const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
@@ -281,102 +316,20 @@
             }
         }
         function saveCellMemo(k, v) { cellMemos[k] = v; localStorage.setItem('cellMemos', JSON.stringify(cellMemos)); }
-
-        // --- 스티커 ---
-        function addSticker(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const stickerLayer = document.getElementById('sticker-layer');
-                    const stickerDiv = document.createElement('div');
-                    stickerDiv.className = 'sticker'; stickerDiv.style.left = '50px'; stickerDiv.style.top = '100px';
-                    const img = document.createElement('img'); img.src = e.target.result;
-                    stickerDiv.appendChild(img);
-                    stickerDiv.ondblclick = (ev) => { ev.stopPropagation(); stickerDiv.remove(); };
-                    let isDragging = false, startX, startY;
-                    stickerDiv.onmousedown = (ev) => { isDragging = true; startX = ev.clientX - stickerDiv.offsetLeft; startY = ev.clientY - stickerDiv.offsetTop; stickerDiv.style.zIndex = 1000; };
-                    document.onmousemove = (ev) => { if (!isDragging) return; stickerDiv.style.left = (ev.clientX - startX) + 'px'; stickerDiv.style.top = (ev.clientY - startY) + 'px'; };
-                    document.onmouseup = () => { isDragging = false; };
-                    stickerLayer.appendChild(stickerDiv);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // --- 아카이브 ---
-        function saveArchive() {
-            const t = document.getElementById('archive-title').value, c = document.getElementById('archive-content').value, img = document.getElementById('archive-preview');
-            if(!t) return alert('제목을 입력해주세요!');
-            const entry = { id: editingId || Date.now(), title: t, content: c, cat: curCat, photo: img.classList.contains('hidden') ? '' : img.src, date: new Date().toLocaleDateString() };
-            if(editingId) { const idx = archiveStore.findIndex(a => a.id === editingId); archiveStore[idx] = entry; editingId = null; } else { archiveStore.push(entry); }
-            localStorage.setItem('archiveStore', JSON.stringify(archiveStore));
-            clearArchiveForm(); toggleArchiveForm(); renderArchives();
-        }
-        function renderArchives(filter = 'ALL') {
-            const b = document.getElementById('archive-list'); b.innerHTML = '';
-            const list = filter === 'ALL' ? archiveStore : archiveStore.filter(a => a.cat === filter);
-            list.forEach(a => {
-                const d = document.createElement('div'); d.className = "archive-list-item";
-                d.onclick = () => showArchiveDetail(a);
-                d.innerHTML = `<div class="w-16 h-16 rounded-2xl bg-gray-50 flex-shrink-0 overflow-hidden">${a.photo ? `<img src="${a.photo}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-200 text-xs">Pic</div>`}</div><div class="flex-grow"><div class="flex justify-between items-start mb-1"><span class="text-[9px] font-bold text-cyan-400 bg-cyan-50 px-2 py-0.5 rounded-full uppercase">${a.cat}</span><span class="text-[9px] text-gray-300 font-medium">${a.date}</span></div><h3 class="font-bold text-sm text-gray-800">${a.title}</h3><p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${a.content}</p></div>`;
-                b.prepend(d);
-            });
-        }
-        function showArchiveDetail(a) {
-            document.getElementById('detail-cat').innerText = a.cat; document.getElementById('detail-date').innerText = a.date;
-            document.getElementById('detail-title').innerText = a.title; document.getElementById('detail-content').innerText = a.content;
-            const img = document.getElementById('detail-img'); if(a.photo) { img.src = a.photo; img.classList.remove('hidden'); } else { img.classList.add('hidden'); }
-            document.getElementById('btn-edit-trigger').onclick = () => editArchive(a);
-            document.getElementById('btn-delete-trigger').onclick = () => deleteArchive(a.id);
-            document.getElementById('archive-detail-modal').classList.remove('hidden');
-        }
+        function saveArchive() { const t = document.getElementById('archive-title').value, c = document.getElementById('archive-content').value, img = document.getElementById('archive-preview'); if(!t) return alert('제목을 입력해주세요!'); const entry = { id: editingId || Date.now(), title: t, content: c, cat: curCat, photo: img.classList.contains('hidden') ? '' : img.src, date: new Date().toLocaleDateString() }; if(editingId) { const idx = archiveStore.findIndex(a => a.id === editingId); archiveStore[idx] = entry; editingId = null; } else { archiveStore.push(entry); } localStorage.setItem('archiveStore', JSON.stringify(archiveStore)); clearArchiveForm(); toggleArchiveForm(); renderArchives(); }
+        function renderArchives(filter = 'ALL') { const b = document.getElementById('archive-list'); b.innerHTML = ''; const list = filter === 'ALL' ? archiveStore : archiveStore.filter(a => a.cat === filter); list.forEach(a => { const d = document.createElement('div'); d.className = "archive-list-item"; d.onclick = () => showArchiveDetail(a); d.innerHTML = `<div class="w-16 h-16 rounded-2xl bg-gray-50 flex-shrink-0 overflow-hidden">${a.photo ? `<img src="${a.photo}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-200 text-xs">Pic</div>`}</div><div class="flex-grow"><div class="flex justify-between items-start mb-1"><span class="text-[9px] font-bold text-cyan-400 bg-cyan-50 px-2 py-0.5 rounded-full uppercase">${a.cat}</span><span class="text-[9px] text-gray-300 font-medium">${a.date}</span></div><h3 class="font-bold text-sm text-gray-800">${a.title}</h3><p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${a.content}</p></div>`; b.prepend(d); }); }
+        function showArchiveDetail(a) { document.getElementById('detail-cat').innerText = a.cat; document.getElementById('detail-date').innerText = a.date; document.getElementById('detail-title').innerText = a.title; document.getElementById('detail-content').innerText = a.content; const img = document.getElementById('detail-img'); if(a.photo) { img.src = a.photo; img.classList.remove('hidden'); } else { img.classList.add('hidden'); } document.getElementById('btn-edit-trigger').onclick = () => editArchive(a); document.getElementById('btn-delete-trigger').onclick = () => deleteArchive(a.id); document.getElementById('archive-detail-modal').classList.remove('hidden'); }
         function closeArchiveDetail() { document.getElementById('archive-detail-modal').classList.add('hidden'); }
         function deleteArchive(id) { if(confirm('기록을 삭제할까요?')) { archiveStore = archiveStore.filter(a => a.id !== id); localStorage.setItem('archiveStore', JSON.stringify(archiveStore)); closeArchiveDetail(); renderArchives(); } }
         function filterArchives(cat, btn) { document.querySelectorAll('#archive-filter-bar .category-chip').forEach(c => c.classList.remove('active')); btn.classList.add('active'); renderArchives(cat); }
         function clearArchiveForm() { document.getElementById('archive-title').value = ''; document.getElementById('archive-content').value = ''; document.getElementById('archive-preview').classList.add('hidden'); document.getElementById('archive-placeholder').classList.remove('hidden'); editingId = null; document.getElementById('btn-archive-save').innerText = 'SAVE RECORD'; }
-
-        // --- 가계부 ---
         function changeFinanceMonth(s) { financeMonth += s; if(financeMonth>11){financeMonth=0;financeYear++}else if(financeMonth<0){financeMonth=11;financeYear--} renderFinance(); }
-        function addExpense() {
-            const n = document.getElementById('exp-name').value, a = document.getElementById('exp-amount').value; if(!n || !a) return alert('내용을 입력하세요!');
-            const key = `${financeYear}-${financeMonth}`; if(!financeStore[key]) financeStore[key] = { expenses: [], profits: [] };
-            financeStore[key].expenses.push({ id: Date.now(), name: n, amount: Number(a) }); localStorage.setItem('financeStore', JSON.stringify(financeStore));
-            document.getElementById('exp-name').value = ''; document.getElementById('exp-amount').value = ''; renderFinance();
-        }
-        function addProfit() {
-            const n = document.getElementById('profit-name').value, a = document.getElementById('profit-amount').value; if(!n || !a) return alert('내용을 입력하세요!');
-            const key = `${financeYear}-${financeMonth}`; if(!financeStore[key]) financeStore[key] = { expenses: [], profits: [] };
-            financeStore[key].profits.push({ id: Date.now(), name: n, amount: Number(a) }); localStorage.setItem('financeStore', JSON.stringify(financeStore));
-            document.getElementById('profit-name').value = ''; document.getElementById('profit-amount').value = ''; renderFinance();
-        }
+        function addExpense() { const n = document.getElementById('exp-name').value, a = document.getElementById('exp-amount').value; if(!n || !a) return alert('내용을 입력하세요!'); const key = `${financeYear}-${financeMonth}`; if(!financeStore[key]) financeStore[key] = { expenses: [], profits: [] }; financeStore[key].expenses.push({ id: Date.now(), name: n, amount: Number(a) }); localStorage.setItem('financeStore', JSON.stringify(financeStore)); document.getElementById('exp-name').value = ''; document.getElementById('exp-amount').value = ''; renderFinance(); }
+        function addProfit() { const n = document.getElementById('profit-name').value, a = document.getElementById('profit-amount').value; if(!n || !a) return alert('내용을 입력하세요!'); const key = `${financeYear}-${financeMonth}`; if(!financeStore[key]) financeStore[key] = { expenses: [], profits: [] }; financeStore[key].profits.push({ id: Date.now(), name: n, amount: Number(a) }); localStorage.setItem('financeStore', JSON.stringify(financeStore)); document.getElementById('profit-name').value = ''; document.getElementById('profit-amount').value = ''; renderFinance(); }
         function deleteFinanceItem(type, id) { const key = `${financeYear}-${financeMonth}`; financeStore[key][type] = financeStore[key][type].filter(i => i.id !== id); localStorage.setItem('financeStore', JSON.stringify(financeStore)); renderFinance(); }
-        function renderFinance() {
-            document.getElementById('finance-month-title').innerText = `${financeYear}. ${String(financeMonth+1).padStart(2,'0')}`;
-            const key = `${financeYear}-${financeMonth}`; const data = financeStore[key] || { expenses: [], profits: [] };
-            const exList = document.getElementById('expense-list'); exList.innerHTML = '';
-            let totalEx = 0; data.expenses.forEach(e => { totalEx += e.amount; const d = document.createElement('div'); d.className = "finance-item"; d.innerHTML = `<span>${e.name}</span><span class="text-sky-600 font-bold">₩ ${e.amount.toLocaleString()}<i class="btn-del-mini" onclick="deleteFinanceItem('expenses', ${e.id})">✕</i></span>`; exList.prepend(d); });
-            document.getElementById('total-expense').innerText = `₩ ${totalEx.toLocaleString()}`;
-            const prList = document.getElementById('profit-list'); prList.innerHTML = '';
-            let totalPr = 0; data.profits.forEach(p => { totalPr += p.amount; const d = document.createElement('div'); d.className = "finance-item"; d.innerHTML = `<span>${p.name}</span><span class="${p.amount >= 0 ? 'text-red-500' : 'text-blue-500'} font-bold">${p.amount >= 0 ? '+' : ''}${p.amount.toLocaleString()}원<i class="btn-del-mini" onclick="deleteFinanceItem('profits', ${p.id})">✕</i></span>`; prList.prepend(d); });
-            const prEl = document.getElementById('total-profit'); prEl.innerText = `₩ ${totalPr.toLocaleString()}`; prEl.className = totalPr >= 0 ? "text-2xl font-black text-red-400" : "text-2xl font-black text-blue-400";
-        }
-
-        // --- 공통 유틸 ---
-        function loadDaily(key) {
-            const d = diaryStore[key] || { highlight:'', content:'', emoji:'🤍', youtube:'', todos:[], moment:'' };
-            document.getElementById('daily-highlight').value = d.highlight; document.getElementById('daily-content').value = d.content;
-            document.getElementById('daily-emoji').innerText = d.emoji || '🤍'; document.getElementById('yt-input').value = d.youtube;
-            updateMusicPreview(d.youtube); const box = document.getElementById('todo-box'); box.innerHTML = '';
-            (d.todos || []).forEach(t => addTodoRow(t.text, t.done)); if(!d.todos?.length) addNewTodo();
-            const img = document.getElementById('moment-preview'), place = document.getElementById('moment-placeholder');
-            if(d.moment) { img.src = d.moment; img.classList.remove('hidden'); place.classList.add('hidden'); } else { img.classList.add('hidden'); place.classList.remove('hidden'); }
-        }
-        function saveDailyData() {
-            const todos = []; document.querySelectorAll('.todo-item').forEach(r => { const txt = r.querySelector('input[type="text"]').value, chk = r.querySelector('input[type="checkbox"]').checked; if(txt) todos.push({ text: txt, done: chk }); });
-            diaryStore[selectedDate] = { highlight: document.getElementById('daily-highlight').value, content: document.getElementById('daily-content').value, emoji: document.getElementById('daily-emoji').innerText, youtube: document.getElementById('yt-input').value, todos: todos, moment: document.getElementById('moment-preview').src.startsWith('data') ? document.getElementById('moment-preview').src : (diaryStore[selectedDate]?.moment || '') };
-            localStorage.setItem('diaryStore', JSON.stringify(diaryStore)); renderCalendar();
-        }
+        function renderFinance() { document.getElementById('finance-month-title').innerText = `${financeYear}. ${String(financeMonth+1).padStart(2,'0')}`; const key = `${financeYear}-${financeMonth}`; const data = financeStore[key] || { expenses: [], profits: [] }; const exList = document.getElementById('expense-list'); exList.innerHTML = ''; let totalEx = 0; data.expenses.forEach(e => { totalEx += e.amount; const d = document.createElement('div'); d.className = "finance-item"; d.innerHTML = `<span>${e.name}</span><span class="text-sky-600 font-bold">₩ ${e.amount.toLocaleString()}<i class="btn-del-mini" onclick="deleteFinanceItem('expenses', ${e.id})">✕</i></span>`; exList.prepend(d); }); document.getElementById('total-expense').innerText = `₩ ${totalEx.toLocaleString()}`; const prList = document.getElementById('profit-list'); prList.innerHTML = ''; let totalPr = 0; data.profits.forEach(p => { totalPr += p.amount; const d = document.createElement('div'); d.className = "finance-item"; d.innerHTML = `<span>${p.name}</span><span class="${p.amount >= 0 ? 'text-red-500' : 'text-blue-500'} font-bold">${p.amount >= 0 ? '+' : ''}${p.amount.toLocaleString()}원<i class="btn-del-mini" onclick="deleteFinanceItem('profits', ${p.id})">✕</i></span>`; prList.prepend(d); }); const prEl = document.getElementById('total-profit'); prEl.innerText = `₩ ${totalPr.toLocaleString()}`; prEl.className = totalPr >= 0 ? "text-2xl font-black text-red-400" : "text-2xl font-black text-blue-400"; }
+        function loadDaily(key) { const d = diaryStore[key] || { highlight:'', content:'', emoji:'🤍', youtube:'', todos:[], moment:'' }; document.getElementById('daily-highlight').value = d.highlight; document.getElementById('daily-content').value = d.content; document.getElementById('daily-emoji').innerText = d.emoji || '🤍'; document.getElementById('yt-input').value = d.youtube; updateMusicPreview(d.youtube); const box = document.getElementById('todo-box'); box.innerHTML = ''; (d.todos || []).forEach(t => addTodoRow(t.text, t.done)); if(!d.todos?.length) addNewTodo(); const img = document.getElementById('moment-preview'), place = document.getElementById('moment-placeholder'); if(d.moment) { img.src = d.moment; img.classList.remove('hidden'); place.classList.add('hidden'); } else { img.classList.add('hidden'); place.classList.remove('hidden'); } }
+        function saveDailyData() { const todos = []; document.querySelectorAll('.todo-item').forEach(r => { const txt = r.querySelector('input[type="text"]').value, chk = r.querySelector('input[type="checkbox"]').checked; if(txt) todos.push({ text: txt, done: chk }); }); diaryStore[selectedDate] = { highlight: document.getElementById('daily-highlight').value, content: document.getElementById('daily-content').value, emoji: document.getElementById('daily-emoji').innerText, youtube: document.getElementById('yt-input').value, todos: todos, moment: document.getElementById('moment-preview').src.startsWith('data') ? document.getElementById('moment-preview').src : (diaryStore[selectedDate]?.moment || '') }; localStorage.setItem('diaryStore', JSON.stringify(diaryStore)); renderCalendar(); }
         function deletePhoto(ev, pId, hId, iId) { ev.stopPropagation(); const i = document.getElementById(pId), h = document.getElementById(hId); i.src = ''; i.classList.add('hidden'); h.classList.remove('hidden'); document.getElementById(iId).value=''; if(pId==='moment-preview') saveDailyData(); }
         function previewPhoto(ev, pId, hId) { const f = ev.target.files[0]; if(f) { const r = new FileReader(); r.onload = (e) => { const i = document.getElementById(pId), h = document.getElementById(hId); i.src = e.target.result; i.classList.remove('hidden'); h.classList.add('hidden'); if(pId==='moment-preview') saveDailyData(); }; r.readAsDataURL(f); } }
         function updateMusicPreview(u) { const id = (u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/)?.[2] || null); document.getElementById('yt-preview').innerHTML = id ? `<iframe class="w-full h-full rounded-2xl" src="https://www.youtube.com/embed/${id}"></iframe>` : '🎵'; }
