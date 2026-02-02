@@ -11,6 +11,7 @@
             --point-pink: #fff5f6; --point-blue: #f0f7ff; --point-blue-text: #60a5fa;
             --point-purple: #f8f7ff; --point-yellow-muted: #fefaf0; --text-main: #4b5563;
             --border-color: #eeeeee; --hover-blue: #e0f2fe;
+            --today-bg: #e0f2fe; /* 오늘 날짜용 강조색 */
         }
         body { font-family: "Pretendard Variable", sans-serif; background-color: #ffffff; color: var(--text-main); -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         section { display: none; } section.active { display: block !important; }
@@ -19,17 +20,22 @@
         .calendar-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; border-top: 1.5px solid var(--border-color); border-left: 1.5px solid var(--border-color); background-color: #ffffff; position: relative; z-index: 1; }
         .calendar-cell { border-right: 1.5px solid var(--border-color); border-bottom: 1.5px solid var(--border-color); aspect-ratio: 1 / 1.4; padding: 8px; display: flex; flex-direction: column; background-color: #ffffff; position: relative; transition: background-color 0.2s; }
         .calendar-cell:hover { background-color: var(--hover-blue); }
+        
+        /* [추가] 오늘 날짜 강조 클래스 */
+        .is-today { background-color: var(--today-bg) !important; }
+
         .cell-memo { width: 100%; flex-grow: 1; border: none; outline: none; resize: none; background: transparent; font-size: 10px; line-height: 1.4; padding: 0; margin-top: 4px; opacity: 0; transition: opacity 0.2s; color: #111827; font-weight: 500; }
         .calendar-cell:hover .cell-memo, .cell-memo:focus, .cell-memo:not(:placeholder-shown) { opacity: 1; }
 
         .nav-btn { color: #9ca3af; padding-bottom: 2px; transition: all 0.2s; border-bottom: 2px solid transparent; }
         .nav-btn.active { color: #111827; font-weight: 800; border-bottom: 2px solid #111827; }
         
+        .highlight-box { background-color: var(--point-blue); border-radius: 2.5rem; padding: 2.5rem; border: 1px solid #e0efff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px; position: relative; }
         .diary-box { background-color: var(--point-yellow-muted); border-radius: 2.5rem; padding: 2.5rem; border: 1px solid #f9f3e5; display: flex; flex-direction: column; height: 100%; }
         .diary-paper { background-color: transparent; line-height: 1.8; border: none; outline: none; resize: none; width: 100%; flex-grow: 1; color: #111827; font-size: 0.875rem; }
 
-        .archive-list-item { display: flex; gap: 20px; padding: 20px; border-radius: 2rem; background-color: #fdfdfd; border: 1px solid #f7f7f7; align-items: center; cursor: pointer; transition: all 0.2s; }
-        .archive-list-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.02); background-color: #ffffff; }
+        .archive-list-item { display: flex; gap: 20px; padding: 20px; border-radius: 2.2rem; background-color: #fdfdfd; border: 1px solid #f7f7f7; align-items: center; cursor: pointer; transition: all 0.2s; }
+        .archive-list-item:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.03); background-color: #ffffff; }
 
         .finance-item { display: flex; justify-content: space-between; padding: 12px 4px; border-bottom: 1px solid #f9fafb; align-items: center; }
         .btn-del-mini { color: #ccc; font-size: 10px; margin-left: 8px; cursor: pointer; }
@@ -37,6 +43,9 @@
         .photo-upload-placeholder { aspect-ratio: 1 / 1.1; background-color: #ffffff; border: 1.5px dashed #e5e7eb; border-radius: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; width: 100%; }
         .btn-delete-photo { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; background: rgba(0,0,0,0.3); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0; transition: opacity 0.2s; z-index: 10; }
         .photo-upload-placeholder:hover .btn-delete-photo { opacity: 1; }
+
+        .category-chip { padding: 6px 18px; border-radius: 99px; font-size: 11px; font-weight: 600; background: white; border: 1px solid #e5e7eb; color: #4b5563; white-space: nowrap; }
+        .category-chip.active { background-color: #a5f3fc; color: #0891b2; border-color: #67e8f9; }
 
         #sticker-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .sticker { position: absolute; cursor: move; pointer-events: auto; z-index: 100; user-select: none; }
@@ -87,9 +96,11 @@
             </div>
             <div class="grid grid-cols-2 gap-10 items-stretch">
                 <div class="flex flex-col space-y-10">
-                    <div class="highlight-box bg-[var(--point-blue)] p-8 rounded-[2rem] border border-blue-100 text-center">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-4 text-left">Highlight</p>
-                        <div style="color: var(--point-blue-text);" class="text-3xl mb-2 select-none">❝</div>
+                    <div class="highlight-box">
+                        <div class="w-full text-left">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-2">Highlight</p>
+                            <div style="color: var(--point-blue-text);" class="text-3xl mb-4 select-none">❝</div>
+                        </div>
                         <textarea id="daily-highlight" spellcheck="false" class="w-full bg-transparent text-center text-xs font-medium outline-none h-12 resize-none" placeholder="오늘의 핵심 문장" oninput="saveDailyData()"></textarea>
                     </div>
                     <div class="diary-box flex flex-col relative">
@@ -103,7 +114,7 @@
                 </div>
                 <div class="flex flex-col space-y-10">
                     <div class="p-6 rounded-[2rem] bg-[var(--point-purple)] border border-purple-100">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-purple-500 mb-4">Music</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-purple-500 mb-4 text-left">Music</p>
                         <input type="text" id="yt-input" oninput="updateMusicPreview(this.value); saveDailyData();" class="w-full bg-transparent border-b border-purple-100 text-[10px] italic outline-none pb-2 mb-4 text-gray-400" placeholder="YouTube 주소">
                         <div id="yt-preview" class="aspect-video bg-white/50 rounded-2xl flex items-center justify-center text-xl text-purple-300">🎵</div>
                     </div>
@@ -144,7 +155,7 @@
                     <button class="category-chip active" onclick="selCat(this, '맛집')">맛집</button>
                     <button class="category-chip" onclick="selCat(this, '카페')">카페</button>
                     <button class="category-chip" onclick="selCat(this, '미디어')">미디어</button>
-                    <button class="category-chip" onclick="selCat(this, '독서')">독서</button>
+                    <button class="category-chip" onclick="selCat(this, '소설')">소설</button>
                     <button class="category-chip" onclick="selCat(this, '만화')">만화</button>
                     <button class="category-chip" onclick="selCat(this, '기타')">기타</button>
                 </div>
@@ -159,7 +170,7 @@
                 </div>
                 <input type="text" id="archive-title" class="w-full font-bold text-xl mb-6 outline-none border-none placeholder:text-gray-200" placeholder="제목">
                 <textarea id="archive-content" spellcheck="false" class="w-full text-sm outline-none h-40 resize-none leading-relaxed placeholder:text-gray-200" placeholder="내용을 입력하세요."></textarea>
-                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs tracking-[0.2em] mt-6 shadow-lg uppercase">Save Record</button>
+                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs shadow-lg uppercase">Save Record</button>
             </div>
             <div id="archive-list" class="space-y-4"></div>
         </section>
@@ -197,13 +208,12 @@
     <div id="emoji-modal" class="fixed inset-0 bg-black/5 backdrop-blur-md z-[100] hidden flex items-center justify-center"><div class="bg-white p-10 rounded-[3rem] max-w-sm w-full shadow-2xl"><div class="grid grid-cols-5 gap-6 h-80 overflow-y-auto pr-2" id="emoji-grid"></div><button onclick="closeEmojiPicker()" class="w-full mt-8 py-4 bg-gray-50 text-gray-400 font-bold rounded-2xl text-[10px] uppercase">Close</button></div></div>
 
     <script>
-        // [수정] 접속한 시점의 실제 날짜로 초기화
         const now = new Date();
-        let currentYear = now.getFullYear();
-        let currentMonth = now.getMonth(); 
-        let financeYear = now.getFullYear();
-        let financeMonth = now.getMonth();
-        let selectedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const realTodayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        
+        let currentYear = now.getFullYear(); let currentMonth = now.getMonth(); 
+        let financeYear = now.getFullYear(); let financeMonth = now.getMonth();
+        let selectedDate = realTodayStr;
 
         let curCat = '맛집', editingId = null;
         let diaryStore = JSON.parse(localStorage.getItem('diaryStore')) || {};
@@ -212,32 +222,25 @@
         let cellMemos = JSON.parse(localStorage.getItem('cellMemos')) || {}; 
         let stickers = JSON.parse(localStorage.getItem('stickers')) || [];
 
-        const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🤍','🍣'];
+        const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🤍','🍣','✈️','🧳','🔋','🪫','🛍️','🧹'];
 
         window.onload = () => { 
-            // 헤더 날짜 라벨 초기화
-            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            document.getElementById('daily-date-header').innerText = `${currentYear}.${String(currentMonth + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${dayNames[now.getDay()]}`;
-            
+            const dNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('daily-date-header').innerText = `${currentYear}.${String(currentMonth + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${dNames[now.getDay()]}`;
             renderCalendar(); renderArchives(); renderFinance(); initEmojiPicker(); loadStickers(); switchTab('monthly'); 
         };
 
-        // (이하 모든 함수 동일하게 유지)
         function exportData() {
-            const allData = { diaryStore, archiveStore, financeStore, cellMemos, stickers };
-            const blob = new Blob([JSON.stringify(allData)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toLocaleDateString()}.json`;
-            a.click();
+            const blob = new Blob([JSON.stringify({ diaryStore, archiveStore, financeStore, cellMemos, stickers })], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toLocaleDateString()}.json`; a.click();
         }
         function importData() { document.getElementById('import-input').click(); }
-        function processImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function processImport(e) {
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = (ev) => {
                 try {
-                    const data = JSON.parse(e.target.result);
+                    const data = JSON.parse(ev.target.result);
                     if (confirm("데이터를 덮어씌울까요?")) {
                         localStorage.setItem('diaryStore', JSON.stringify(data.diaryStore || {}));
                         localStorage.setItem('archiveStore', JSON.stringify(data.archiveStore || []));
@@ -250,13 +253,45 @@
             };
             reader.readAsDataURL(file);
         }
+
+        function addSticker(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const id = Date.now();
+                    const sData = { id, src: ev.target.result, left: 50, top: 100 };
+                    stickers.push(sData); saveStickers(); createStickerElement(sData);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        function createStickerElement(data) {
+            const layer = document.getElementById('sticker-layer'); const div = document.createElement('div');
+            div.className = 'sticker'; div.style.left = data.left + 'px'; div.style.top = data.top + 'px';
+            div.innerHTML = `<img src="${data.src}">`;
+            div.ondblclick = (e) => { e.stopPropagation(); stickers = stickers.filter(s => s.id !== data.id); saveStickers(); div.remove(); };
+            let isDragging = false, sX, sY;
+            div.onmousedown = (e) => { isDragging = true; sX = e.clientX - div.offsetLeft; sY = e.clientY - div.offsetTop; div.style.zIndex = 1000; };
+            document.onmousemove = (e) => {
+                if (!isDragging) return;
+                const nL = e.clientX - sX, nT = e.clientY - sY;
+                div.style.left = nL + 'px'; div.style.top = nT + 'px';
+                const s = stickers.find(item => item.id === data.id); if(s) { s.left = nL; s.top = nT; }
+            };
+            document.onmouseup = () => { if(isDragging) { isDragging = false; saveStickers(); } };
+            layer.appendChild(div);
+        }
+        function loadStickers() { stickers.forEach(s => createStickerElement(s)); }
+        function saveStickers() { localStorage.setItem('stickers', JSON.stringify(stickers)); }
+
         function switchTab(id) { document.querySelectorAll('section').forEach(s => s.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + id).classList.add('active'); if(id === 'daily') loadDaily(selectedDate); window.scrollTo(0,0); }
+
         function renderCalendar() {
             const container = document.getElementById('calendar-container'); container.innerHTML = '';
             const labels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
             labels.forEach(d => {
-                const h = document.createElement('div'); h.className = "text-[9px] text-center py-4 font-bold bg-white border-r border-b";
-                h.style.borderColor = "var(--border-color)";
+                const h = document.createElement('div'); h.className = "text-[9px] text-center py-4 font-bold bg-white border-r border-b"; h.style.borderColor = "var(--border-color)";
                 if(d==='SAT') h.classList.add('text-blue-400'); else if(d==='SUN') h.classList.add('text-red-400'); else h.classList.add('text-slate-400');
                 h.innerText = d; container.appendChild(h);
             });
@@ -264,23 +299,49 @@
             const firstDay = (new Date(currentYear, currentMonth, 1).getDay() || 7) - 1;
             for(let i=0; i<firstDay; i++) { const empty = document.createElement('div'); empty.className = "border-r border-b"; empty.style.borderColor = "var(--border-color)"; container.appendChild(empty); }
             const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
             for(let i=1; i<=lastDate; i++) {
                 const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-                const cell = document.createElement('div'); cell.className = `calendar-cell cursor-pointer transition-all hover:bg-white`;
+                const cell = document.createElement('div');
+                
+                // [복구] 오늘 날짜 강조 로직 (현재 달력의 연/월/일이 실제 오늘과 같으면 강조색 입힘)
+                const isToday = (key === realTodayStr);
+                cell.className = `calendar-cell cursor-pointer transition-all hover:bg-white ${isToday ? 'is-today' : ''}`;
+                
                 cell.innerHTML = `<span class="text-[9px] font-bold ${new Date(currentYear,currentMonth,i).getDay()===0?'text-red-300':''}">${i}</span><div class="text-center text-xs my-auto pointer-events-none">${diaryStore[key]?.emoji || ''}</div><textarea spellcheck="false" class="cell-memo" placeholder="메모" oninput="saveCellMemo('${key}', this.value)" onclick="event.stopPropagation()">${cellMemos[key] || ''}</textarea>`;
                 cell.onclick = (e) => { if(e.target.tagName !== 'TEXTAREA') { selectedDate = key; const dNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; const curD = new Date(currentYear, currentMonth, i); document.getElementById('daily-date-header').innerText = `${currentYear}.${String(currentMonth + 1).padStart(2, '0')}.${String(i).padStart(2, '0')} ${dNames[curD.getDay()]}`; switchTab('daily'); renderCalendar(); } };
                 container.appendChild(cell);
             }
         }
         function saveCellMemo(k, v) { cellMemos[k] = v; localStorage.setItem('cellMemos', JSON.stringify(cellMemos)); }
-        function addSticker(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { const id = Date.now(); const stickerData = { id, src: e.target.result, left: 50, top: 100 }; stickers.push(stickerData); saveStickers(); createStickerElement(stickerData); }; reader.readAsDataURL(file); } }
-        function createStickerElement(data) { const layer = document.getElementById('sticker-layer'); const div = document.createElement('div'); div.className = 'sticker'; div.style.left = data.left + 'px'; div.style.top = data.top + 'px'; div.innerHTML = `<img src="${data.src}">`; div.ondblclick = (e) => { e.stopPropagation(); stickers = stickers.filter(s => s.id !== data.id); saveStickers(); div.remove(); }; let isDragging = false, startX, startY; div.onmousedown = (e) => { isDragging = true; startX = e.clientX - div.offsetLeft; startY = e.clientY - div.offsetTop; div.style.zIndex = 1000; }; document.onmousemove = (e) => { if (!isDragging) return; const newLeft = e.clientX - startX, newTop = e.clientY - startY; div.style.left = newLeft + 'px'; div.style.top = newTop + 'px'; const s = stickers.find(item => item.id === data.id); if(s) { s.left = newLeft; s.top = newTop; } }; document.onmouseup = () => { if(isDragging) { isDragging = false; saveStickers(); } }; layer.appendChild(div); }
-        function loadStickers() { stickers.forEach(s => createStickerElement(s)); }
-        function saveStickers() { localStorage.setItem('stickers', JSON.stringify(stickers)); }
-        function saveArchive() { const t = document.getElementById('archive-title').value, c = document.getElementById('archive-content').value, img = document.getElementById('archive-preview'); if(!t) return alert('제목을 입력해주세요!'); const entry = { id: editingId || Date.now(), title: t, content: c, cat: curCat, photo: img.classList.contains('hidden') ? '' : img.src, date: new Date().toLocaleDateString() }; if(editingId) { const idx = archiveStore.findIndex(a => a.id === editingId); archiveStore[idx] = entry; editingId = null; } else { archiveStore.push(entry); } localStorage.setItem('archiveStore', JSON.stringify(archiveStore)); clearArchiveForm(); toggleArchiveForm(); renderArchives(); }
-        function renderArchives(filter = 'ALL') { const b = document.getElementById('archive-list'); b.innerHTML = ''; const list = filter === 'ALL' ? archiveStore : archiveStore.filter(a => a.cat === filter); list.forEach(a => { const d = document.createElement('div'); d.className = "archive-list-item"; d.onclick = () => showArchiveDetail(a); d.innerHTML = `<div class="w-16 h-16 rounded-2xl bg-gray-50 flex-shrink-0 overflow-hidden">${a.photo ? `<img src="${a.photo}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-200 text-xs">Pic</div>`}</div><div class="flex-grow"><div class="flex justify-between items-start mb-1"><span class="text-[9px] font-bold text-cyan-400 bg-cyan-50 px-2 py-0.5 rounded-full uppercase">${a.cat}</span><span class="text-[9px] text-gray-300 font-medium">${a.date}</span></div><h3 class="font-bold text-sm text-gray-800">${a.title}</h3><p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${a.content}</p></div>`; b.prepend(d); }); }
-        function showArchiveDetail(a) { document.getElementById('detail-cat').innerText = a.cat; document.getElementById('detail-date').innerText = a.date; document.getElementById('detail-title').innerText = a.title; document.getElementById('detail-content').innerText = a.content; const img = document.getElementById('detail-img'); if(a.photo) { img.src = a.photo; img.classList.remove('hidden'); } else { img.classList.add('hidden'); } document.getElementById('btn-edit-trigger').onclick = () => editArchive(a); document.getElementById('btn-delete-trigger').onclick = () => deleteArchive(a.id); document.getElementById('archive-detail-modal').classList.remove('hidden'); }
+
+        function saveArchive() {
+            const t = document.getElementById('archive-title').value, c = document.getElementById('archive-content').value, img = document.getElementById('archive-preview');
+            if(!t) return alert('제목을 입력해주세요!');
+            const entry = { id: editingId || Date.now(), title: t, content: c, cat: curCat, photo: img.classList.contains('hidden') ? '' : img.src, date: new Date().toLocaleDateString() };
+            if(editingId) { const idx = archiveStore.findIndex(a => a.id === editingId); archiveStore[idx] = entry; editingId = null; } else { archiveStore.push(entry); }
+            localStorage.setItem('archiveStore', JSON.stringify(archiveStore)); clearArchiveForm(); toggleArchiveForm(); renderArchives();
+        }
+        function renderArchives(filter = 'ALL') {
+            const b = document.getElementById('archive-list'); b.innerHTML = '';
+            const list = filter === 'ALL' ? archiveStore : archiveStore.filter(a => a.cat === filter);
+            list.forEach(a => {
+                const d = document.createElement('div'); d.className = "archive-list-item";
+                d.onclick = () => showArchiveDetail(a);
+                d.innerHTML = `<div class="w-16 h-16 rounded-2xl bg-gray-50 flex-shrink-0 overflow-hidden">${a.photo ? `<img src="${a.photo}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-200 text-xs">Pic</div>`}</div><div class="flex-grow"><div class="flex justify-between items-start mb-1"><span class="text-[9px] font-bold text-cyan-400 bg-cyan-50 px-2 py-0.5 rounded-full uppercase">${a.cat}</span><span class="text-[9px] text-gray-300 font-medium">${a.date}</span></div><h3 class="font-bold text-sm text-gray-800">${a.title}</h3><p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${a.content}</p></div>`;
+                b.prepend(d);
+            });
+        }
+        function showArchiveDetail(a) {
+            document.getElementById('detail-cat').innerText = a.cat; document.getElementById('detail-date').innerText = a.date;
+            document.getElementById('detail-title').innerText = a.title; document.getElementById('detail-content').innerText = a.content;
+            const img = document.getElementById('detail-img'); if(a.photo) { img.src = a.photo; img.classList.remove('hidden'); } else { img.classList.add('hidden'); }
+            document.getElementById('btn-edit-trigger').onclick = () => editArchive(a);
+            document.getElementById('btn-delete-trigger').onclick = () => deleteArchive(a.id);
+            document.getElementById('archive-detail-modal').classList.remove('hidden');
+        }
         function closeArchiveDetail() { document.getElementById('archive-detail-modal').classList.add('hidden'); }
+        function editArchive(a) { closeArchiveDetail(); if(document.getElementById('archive-form').classList.contains('hidden')) toggleArchiveForm(); editingId = a.id; document.getElementById('archive-title').value = a.title; document.getElementById('archive-content').value = a.content; const img = document.getElementById('archive-preview'), place = document.getElementById('archive-placeholder'); if(a.photo) { img.src = a.photo; img.classList.remove('hidden'); place.classList.add('hidden'); } document.getElementById('btn-archive-save').innerText = 'UPDATE RECORD'; window.scrollTo(0,0); }
         function deleteArchive(id) { if(confirm('기록을 삭제할까요?')) { archiveStore = archiveStore.filter(a => a.id !== id); localStorage.setItem('archiveStore', JSON.stringify(archiveStore)); closeArchiveDetail(); renderArchives(); } }
         function filterArchives(cat, btn) { document.querySelectorAll('#archive-filter-bar .category-chip').forEach(c => c.classList.remove('active')); btn.classList.add('active'); renderArchives(cat); }
         function clearArchiveForm() { document.getElementById('archive-title').value = ''; document.getElementById('archive-content').value = ''; document.getElementById('archive-preview').classList.add('hidden'); document.getElementById('archive-placeholder').classList.remove('hidden'); editingId = null; document.getElementById('btn-archive-save').innerText = 'SAVE RECORD'; }
