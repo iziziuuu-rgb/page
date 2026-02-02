@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Diary & Finance - Final Backup v2</title>
+    <title>Daily Diary & Finance - Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
@@ -38,7 +38,6 @@
         .btn-delete-photo { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; background: rgba(0,0,0,0.3); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0; transition: opacity 0.2s; z-index: 10; }
         .photo-upload-placeholder:hover .btn-delete-photo { opacity: 1; }
 
-        /* 스티커 레이어 */
         #sticker-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .sticker { position: absolute; cursor: move; pointer-events: auto; z-index: 100; user-select: none; }
         .sticker img { max-width: 80px; max-height: 80px; display: block; }
@@ -65,7 +64,7 @@
             <div class="mb-10 flex justify-between items-center px-1">
                 <div class="flex items-center gap-6">
                     <button onclick="changeMonth(-1)" class="text-gray-300 text-xl font-light">&lt;</button>
-                    <h2 id="calendar-title" class="text-lg font-bold text-slate-800 tracking-tight">2026. 03</h2>
+                    <h2 id="calendar-title" class="text-lg font-bold text-slate-800 tracking-tight"></h2>
                     <button onclick="changeMonth(1)" class="text-gray-300 text-xl font-light">&gt;</button>
                 </div>
                 <div class="flex gap-2">
@@ -84,7 +83,7 @@
 
         <section id="view-daily">
             <div class="flex justify-center items-center mb-14 pb-4 border-b border-gray-100">
-                <h2 id="daily-date-header" class="text-xs font-bold tracking-widest text-gray-400 uppercase">2026.03.09 Monday</h2>
+                <h2 id="daily-date-header" class="text-xs font-bold tracking-widest text-gray-400 uppercase"></h2>
             </div>
             <div class="grid grid-cols-2 gap-10 items-stretch">
                 <div class="flex flex-col space-y-10">
@@ -145,7 +144,7 @@
                     <button class="category-chip active" onclick="selCat(this, '맛집')">맛집</button>
                     <button class="category-chip" onclick="selCat(this, '카페')">카페</button>
                     <button class="category-chip" onclick="selCat(this, '미디어')">미디어</button>
-                    <button class="category-chip" onclick="selCat(this, '소설')">소설</button>
+                    <button class="category-chip" onclick="selCat(this, '독서')">독서</button>
                     <button class="category-chip" onclick="selCat(this, '만화')">만화</button>
                     <button class="category-chip" onclick="selCat(this, '기타')">기타</button>
                 </div>
@@ -153,14 +152,14 @@
                     <img id="archive-preview" class="absolute inset-0 w-full h-full object-cover hidden" />
                     <div id="archive-placeholder" class="flex flex-col items-center text-center">
                         <span class="text-xl mb-2">📷</span>
-                        <span class="text-[10px] text-gray-300 font-bold uppercase tracking-widest px-4 leading-tight">Tap to add photo</span>
+                        <span class="text-[10px] text-gray-300 font-bold uppercase tracking-widest px-4 leading-tight text-center">Tap to add photo</span>
                     </div>
                     <input type="file" id="archive-upload" class="hidden" accept="image/*" onchange="previewPhoto(event, 'archive-preview', 'archive-placeholder')">
                     <div onclick="deletePhoto(event, 'archive-preview', 'archive-placeholder', 'archive-upload')" class="btn-delete-photo">✕</div>
                 </div>
                 <input type="text" id="archive-title" class="w-full font-bold text-xl mb-6 outline-none border-none placeholder:text-gray-200" placeholder="제목">
                 <textarea id="archive-content" spellcheck="false" class="w-full text-sm outline-none h-40 resize-none leading-relaxed placeholder:text-gray-200" placeholder="내용을 입력하세요."></textarea>
-                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs shadow-lg uppercase">Save Record</button>
+                <button onclick="saveArchive()" id="btn-archive-save" class="w-full py-5 bg-cyan-400 text-white rounded-full font-bold text-xs tracking-[0.2em] mt-6 shadow-lg uppercase">Save Record</button>
             </div>
             <div id="archive-list" class="space-y-4"></div>
         </section>
@@ -168,7 +167,7 @@
         <section id="view-finance">
             <div class="mb-10 flex justify-center items-center gap-6">
                 <button onclick="changeFinanceMonth(-1)" class="text-gray-300 text-xl font-light">&lt;</button>
-                <h2 id="finance-month-title" class="text-lg font-bold text-slate-800 tracking-tight">2026. 03</h2>
+                <h2 id="finance-month-title" class="text-lg font-bold text-slate-800 tracking-tight"></h2>
                 <button onclick="changeFinanceMonth(1)" class="text-gray-300 text-xl font-light">&gt;</button>
             </div>
             <div class="bg-[var(--point-blue)] p-10 rounded-[3rem] border border-blue-50 mb-12 shadow-sm flex justify-between items-start">
@@ -198,27 +197,39 @@
     <div id="emoji-modal" class="fixed inset-0 bg-black/5 backdrop-blur-md z-[100] hidden flex items-center justify-center"><div class="bg-white p-10 rounded-[3rem] max-w-sm w-full shadow-2xl"><div class="grid grid-cols-5 gap-6 h-80 overflow-y-auto pr-2" id="emoji-grid"></div><button onclick="closeEmojiPicker()" class="w-full mt-8 py-4 bg-gray-50 text-gray-400 font-bold rounded-2xl text-[10px] uppercase">Close</button></div></div>
 
     <script>
-        let currentYear = 2026, currentMonth = 2, selectedDate = "2026-03-09", curCat = '맛집', editingId = null;
-        let financeYear = 2026, financeMonth = 2;
+        // [수정] 접속한 시점의 실제 날짜로 초기화
+        const now = new Date();
+        let currentYear = now.getFullYear();
+        let currentMonth = now.getMonth(); 
+        let financeYear = now.getFullYear();
+        let financeMonth = now.getMonth();
+        let selectedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        let curCat = '맛집', editingId = null;
         let diaryStore = JSON.parse(localStorage.getItem('diaryStore')) || {};
         let archiveStore = JSON.parse(localStorage.getItem('archiveStore')) || [];
         let financeStore = JSON.parse(localStorage.getItem('financeStore')) || {}; 
         let cellMemos = JSON.parse(localStorage.getItem('cellMemos')) || {}; 
-        let stickers = JSON.parse(localStorage.getItem('stickers')) || []; // [NEW] 스티커 데이터 저장소
+        let stickers = JSON.parse(localStorage.getItem('stickers')) || [];
 
         const emojis = ['😀','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥹','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🫠','🤐','🥴','🤢','🤮','🤧','🥱','😴','🤤','😪','😵','😵‍💫','☀️','☁️','🌥️','🌦️','🌧️','🌨️','🌩️','⛈️','🌫️','☃️','🌙','🌟','⭐','🔥','💧','🌈','🍀','🌸','🩷','🌷','🌼','🌱','🗝️','🍻','🧸','🎁','🍥','✉️','📦','🕯️','💡','💻','📱','📷','🎬','📚','🎨','🎧','🎸','🎮','🏀','⚽️','🚴','🎾','🍱','🍲','🍙','🥟','🍕','🍔','🥨','🍦','🍰','🍷','☕️','🥤','🍷','🍺','‼️','⁉️','❓','❗','⭕','❌','✅','⚠️','💤','💬','💭','🤍','🍣'];
 
-        window.onload = () => { renderCalendar(); renderArchives(); renderFinance(); initEmojiPicker(); loadStickers(); switchTab('monthly'); };
+        window.onload = () => { 
+            // 헤더 날짜 라벨 초기화
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('daily-date-header').innerText = `${currentYear}.${String(currentMonth + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${dayNames[now.getDay()]}`;
+            
+            renderCalendar(); renderArchives(); renderFinance(); initEmojiPicker(); loadStickers(); switchTab('monthly'); 
+        };
 
-        // --- 데이터 백업 및 복구 (스티커 포함) ---
+        // (이하 모든 함수 동일하게 유지)
         function exportData() {
-            const allData = { diaryStore, archiveStore, financeStore, cellMemos, stickers }; // stickers 추가
+            const allData = { diaryStore, archiveStore, financeStore, cellMemos, stickers };
             const blob = new Blob([JSON.stringify(allData)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob); a.download = `backup_${new Date().toLocaleDateString()}.json`;
             a.click();
         }
-
         function importData() { document.getElementById('import-input').click(); }
         function processImport(event) {
             const file = event.target.files[0];
@@ -232,67 +243,13 @@
                         localStorage.setItem('archiveStore', JSON.stringify(data.archiveStore || []));
                         localStorage.setItem('financeStore', JSON.stringify(data.financeStore || {}));
                         localStorage.setItem('cellMemos', JSON.stringify(data.cellMemos || {}));
-                        localStorage.setItem('stickers', JSON.stringify(data.stickers || [])); // stickers 복구
+                        localStorage.setItem('stickers', JSON.stringify(data.stickers || []));
                         location.reload();
                     }
                 } catch (err) { alert("잘못된 파일입니다."); }
             };
             reader.readAsDataURL(file);
         }
-
-        // --- 스티커 기능 보강 (저장 로직 추가) ---
-        function addSticker(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const id = Date.now();
-                    const stickerData = { id, src: e.target.result, left: 50, top: 100 };
-                    stickers.push(stickerData);
-                    saveStickers();
-                    createStickerElement(stickerData);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function createStickerElement(data) {
-            const layer = document.getElementById('sticker-layer');
-            const div = document.createElement('div');
-            div.className = 'sticker';
-            div.style.left = data.left + 'px'; div.style.top = data.top + 'px';
-            div.innerHTML = `<img src="${data.src}">`;
-            
-            div.ondblclick = (e) => {
-                e.stopPropagation();
-                stickers = stickers.filter(s => s.id !== data.id);
-                saveStickers(); div.remove();
-            };
-
-            let isDragging = false, startX, startY;
-            div.onmousedown = (e) => {
-                isDragging = true;
-                startX = e.clientX - div.offsetLeft;
-                startY = e.clientY - div.offsetTop;
-                div.style.zIndex = 1000;
-            };
-            document.onmousemove = (e) => {
-                if (!isDragging) return;
-                const newLeft = e.clientX - startX;
-                const newTop = e.clientY - startY;
-                div.style.left = newLeft + 'px'; div.style.top = newTop + 'px';
-                // 실시간 위치 데이터 업데이트
-                const s = stickers.find(item => item.id === data.id);
-                if(s) { s.left = newLeft; s.top = newTop; }
-            };
-            document.onmouseup = () => { if(isDragging) { isDragging = false; saveStickers(); } };
-            layer.appendChild(div);
-        }
-
-        function loadStickers() { stickers.forEach(s => createStickerElement(s)); }
-        function saveStickers() { localStorage.setItem('stickers', JSON.stringify(stickers)); }
-
-        // --- 나머지 기존 기능 유지 ---
         function switchTab(id) { document.querySelectorAll('section').forEach(s => s.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + id).classList.add('active'); if(id === 'daily') loadDaily(selectedDate); window.scrollTo(0,0); }
         function renderCalendar() {
             const container = document.getElementById('calendar-container'); container.innerHTML = '';
@@ -311,11 +268,15 @@
                 const key = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const cell = document.createElement('div'); cell.className = `calendar-cell cursor-pointer transition-all hover:bg-white`;
                 cell.innerHTML = `<span class="text-[9px] font-bold ${new Date(currentYear,currentMonth,i).getDay()===0?'text-red-300':''}">${i}</span><div class="text-center text-xs my-auto pointer-events-none">${diaryStore[key]?.emoji || ''}</div><textarea spellcheck="false" class="cell-memo" placeholder="메모" oninput="saveCellMemo('${key}', this.value)" onclick="event.stopPropagation()">${cellMemos[key] || ''}</textarea>`;
-                cell.onclick = (e) => { if(e.target.tagName !== 'TEXTAREA') { selectedDate = key; document.getElementById('daily-date-header').innerText = key; switchTab('daily'); renderCalendar(); } };
+                cell.onclick = (e) => { if(e.target.tagName !== 'TEXTAREA') { selectedDate = key; const dNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; const curD = new Date(currentYear, currentMonth, i); document.getElementById('daily-date-header').innerText = `${currentYear}.${String(currentMonth + 1).padStart(2, '0')}.${String(i).padStart(2, '0')} ${dNames[curD.getDay()]}`; switchTab('daily'); renderCalendar(); } };
                 container.appendChild(cell);
             }
         }
         function saveCellMemo(k, v) { cellMemos[k] = v; localStorage.setItem('cellMemos', JSON.stringify(cellMemos)); }
+        function addSticker(event) { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (e) => { const id = Date.now(); const stickerData = { id, src: e.target.result, left: 50, top: 100 }; stickers.push(stickerData); saveStickers(); createStickerElement(stickerData); }; reader.readAsDataURL(file); } }
+        function createStickerElement(data) { const layer = document.getElementById('sticker-layer'); const div = document.createElement('div'); div.className = 'sticker'; div.style.left = data.left + 'px'; div.style.top = data.top + 'px'; div.innerHTML = `<img src="${data.src}">`; div.ondblclick = (e) => { e.stopPropagation(); stickers = stickers.filter(s => s.id !== data.id); saveStickers(); div.remove(); }; let isDragging = false, startX, startY; div.onmousedown = (e) => { isDragging = true; startX = e.clientX - div.offsetLeft; startY = e.clientY - div.offsetTop; div.style.zIndex = 1000; }; document.onmousemove = (e) => { if (!isDragging) return; const newLeft = e.clientX - startX, newTop = e.clientY - startY; div.style.left = newLeft + 'px'; div.style.top = newTop + 'px'; const s = stickers.find(item => item.id === data.id); if(s) { s.left = newLeft; s.top = newTop; } }; document.onmouseup = () => { if(isDragging) { isDragging = false; saveStickers(); } }; layer.appendChild(div); }
+        function loadStickers() { stickers.forEach(s => createStickerElement(s)); }
+        function saveStickers() { localStorage.setItem('stickers', JSON.stringify(stickers)); }
         function saveArchive() { const t = document.getElementById('archive-title').value, c = document.getElementById('archive-content').value, img = document.getElementById('archive-preview'); if(!t) return alert('제목을 입력해주세요!'); const entry = { id: editingId || Date.now(), title: t, content: c, cat: curCat, photo: img.classList.contains('hidden') ? '' : img.src, date: new Date().toLocaleDateString() }; if(editingId) { const idx = archiveStore.findIndex(a => a.id === editingId); archiveStore[idx] = entry; editingId = null; } else { archiveStore.push(entry); } localStorage.setItem('archiveStore', JSON.stringify(archiveStore)); clearArchiveForm(); toggleArchiveForm(); renderArchives(); }
         function renderArchives(filter = 'ALL') { const b = document.getElementById('archive-list'); b.innerHTML = ''; const list = filter === 'ALL' ? archiveStore : archiveStore.filter(a => a.cat === filter); list.forEach(a => { const d = document.createElement('div'); d.className = "archive-list-item"; d.onclick = () => showArchiveDetail(a); d.innerHTML = `<div class="w-16 h-16 rounded-2xl bg-gray-50 flex-shrink-0 overflow-hidden">${a.photo ? `<img src="${a.photo}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-200 text-xs">Pic</div>`}</div><div class="flex-grow"><div class="flex justify-between items-start mb-1"><span class="text-[9px] font-bold text-cyan-400 bg-cyan-50 px-2 py-0.5 rounded-full uppercase">${a.cat}</span><span class="text-[9px] text-gray-300 font-medium">${a.date}</span></div><h3 class="font-bold text-sm text-gray-800">${a.title}</h3><p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${a.content}</p></div>`; b.prepend(d); }); }
         function showArchiveDetail(a) { document.getElementById('detail-cat').innerText = a.cat; document.getElementById('detail-date').innerText = a.date; document.getElementById('detail-title').innerText = a.title; document.getElementById('detail-content').innerText = a.content; const img = document.getElementById('detail-img'); if(a.photo) { img.src = a.photo; img.classList.remove('hidden'); } else { img.classList.add('hidden'); } document.getElementById('btn-edit-trigger').onclick = () => editArchive(a); document.getElementById('btn-delete-trigger').onclick = () => deleteArchive(a.id); document.getElementById('archive-detail-modal').classList.remove('hidden'); }
